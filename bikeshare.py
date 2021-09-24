@@ -1,6 +1,7 @@
 import datetime as dt
 import numpy as np
 import pandas as pd
+from tabulate import tabulate
 
 
 '''
@@ -401,25 +402,16 @@ def stats_missing_data(dataframe, city, month, day):
 	print("*"*100)
 
 def raw_data_display(dataframe):
-	'''
-		Purpose:
-			Display 5 rows of raw data pending user input
-		Args:
-			dataframe
-		Returns:
-			Prints 5 rows of data pending user input
-	'''
-	#Get total nr of rows in dataframe
-	nr_rows = dataframe.shape[0]
-	#Initialise counter
-	display = 0
-	#Get user input and display rows of data, beginning with column names
-	for rows in range(0, nr_rows, 5):
-		user_input = input("Would you like to view the data? Yes or No?\n")
-		if user_input.lower() != 'yes':
+
+def raw_data_display(dataframe):
+	while True:
+		i = 0
+		display_data = input("\nWould you like to display 5 lines of data? Enter yes or no.\n")
+		if display_data.lower() != 'yes':
 			break
-		print(dataframe.head(display))
-		display += 5
+		print(tabulate(df_default.iloc[np.arange(0+i15+i)], headers = "keys"))
+		i+5
+
 
 def main():
 
@@ -434,6 +426,7 @@ def main():
         stats_station(bikeshare_dataframe, city, month, day)
         stats_dates(bikeshare_dataframe, city, month, day)
         stats_missing_data(bikeshare_dataframe, city, month, day)
+		raw_data_display(bikeshare_dataframe)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() == 'yes':
