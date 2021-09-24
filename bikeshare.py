@@ -255,7 +255,7 @@ def stats_users(dataframe, city, month, day):
 
 	print("We\'ll now look at some more detailed user stats for {}.\n".format(city))
 	#Count the number of different user types
-	types = dataframe['User Type'].value_counts()
+	user_types = dataframe['User Type'].value_counts()
 	#Test whether dataset has 'Gender' as a column
 	gender_test = 'Gender' in dataframe
 	#Test whether dataset has 'Birth Year' as a column
@@ -274,18 +274,18 @@ def stats_users(dataframe, city, month, day):
 	#If dataset contains Birth Year, determin oldest, youngest, and median
 	if birth_year_test == True:
 		current_year = dt.date.today().year
-		min_year = int(dataframe['Birth Year'].min())
-		max_year = int(dataframe['Birth Year'].max())
+		least_recent_year = int(dataframe['Birth Year'].min())
+		most_recent_year = int(dataframe['Birth Year'].max())
 		mode_year = int(dataframe['Birth Year'].mode()[0])
-		old_age = int(current_year-min_year)
-		young_age = int(current_year-max_year)
+		oldest_age = int(current_year-least_recent_year)
+		youngest_age = int(current_year-most_recent_year)
 		print(
-		f"The oldest riders were born in {min_year} and are {old_age} years old.",\
-		f"\nThe youngest riders were born in {max_year} and are {young_age} years old.",\
+		f"The oldest riders were born in {least_recent_year} and are {oldest_age} years old.",\
+		f"\nThe youngest riders were born in {most_recent_year} and are {youngest_age} years old.",\
 		f"\nThe most common birth year is {mode_year}.")
 	else:
 		print("This dataset does not contain age data for {}.".format(city))
-	print("\nThese are the types of customers in {}:\n".format(city), types.to_string())
+	print("\nThese are the types of customers in {}:\n".format(city), user_types.to_string())
 	print("*"*100)
 
 def stats_station(dataframe, city, month, day):
@@ -303,17 +303,17 @@ def stats_station(dataframe, city, month, day):
 	print("We\'ll now look at some more detailed station stats for {}.\n".format(city))
 
 	#Determine most popular starting station
-	most_pop_start = dataframe['Start Station'].mode()[0]
-	print("The most popular starting station was:",most_pop_start)
+	most_popular_start_station = dataframe['Start Station'].mode()[0]
+	print("The most popular starting station was:",most_popular_start_station)
 
 	#Determine most popular destination station
-	most_pop_end = dataframe['End Station'].mode()[0]
-	print("The most popular ending station was:",most_pop_end)
+	most_popular_end_station = dataframe['End Station'].mode()[0]
+	print("The most popular ending station was:", most_popular_end_station)
 
 	#Determine most popular start/destination station combination
-	most_pop_combo = dataframe.groupby(['Start Station','End Station']).size(
+	most_popular_startstop_combo = dataframe.groupby(['Start Station','End Station']).size(
 	).sort_values(ascending=False).head(5).to_string()
-	print("\nThe top 5 most popular starting and ending station combinations were:\n\n", most_pop_combo)
+	print("\nThe top 5 most popular starting and ending station combinations were:\n\n", most_popular_startstop_combo)
 	print("*"*100)
 
 def stats_dates(dataframe, city, month, day):
@@ -333,25 +333,25 @@ def stats_dates(dataframe, city, month, day):
 	#was the most popular. Can't determine most popular month if only
 	#using one month
 	if month == 'All':
-		pop_month_index = dataframe['month'].mode()[0]
-		pop_month = list(month_dict)[pop_month_index - 1]
-		print("The most popular month is: {}".format(pop_month))
+		popular_month_index = dataframe['month'].mode()[0]
+		popular_month = list(month_dict)[popular_month_index - 1]
+		print("The most popular month is: {}".format(popular_month))
 	else:
 		print("Insufficient date range to determine the most popular month. Try \'All\' next time.")
 	#If user selected ALL days, this allows them to determine which day
 	#was the most popular. Can't determine most popular day if only
 	#using one day
 	if day == 'All':
-		pop_day = dataframe['day_of_week'].mode()[0]
-		print("The most popular day is: {}".format(pop_day))
+		popular_day = dataframe['day_of_week'].mode()[0]
+		print("The most popular day is: {}".format(popular_day))
 	else:
 		print("Insufficient date range to determine the most popular day. Try \'All\' next time.")
 	#Determine the most popular hour and present in 12hr format.
 	pop_hr = dataframe['hour'].mode()[0]
-	if pop_hr < 12:
-		print("The most popular hour is: {}a.m.".format(pop_hr))
+	if popular_hr < 12:
+		print("The most popular hour is: {}a.m.".format(popular_hr))
 	else:
-		print("The most popular hour is: {}p.m.".format(pop_hr - 12))
+		print("The most popular hour is: {}p.m.".format(popular_hr - 12))
 	print("*"*100)
 
 def stats_missing_data(dataframe, city, month, day):
@@ -400,8 +400,6 @@ def stats_missing_data(dataframe, city, month, day):
 	else:
 		print("\nSome missing data unaccounted for. Total unaccounted values: {}".format(data_test))
 	print("*"*100)
-
-def raw_data_display(dataframe):
 
 def raw_data_display(dataframe):
 	while True:
