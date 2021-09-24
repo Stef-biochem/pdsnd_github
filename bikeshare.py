@@ -38,7 +38,7 @@ day_dict = {
 'Sunday': ['sun','sunday'],
 'All': ['all','al','alll','aall','aal']}
 
-### functions begin here ###
+''' functions begin here '''
 
 def getkeys(dict, item):
 	'''
@@ -171,24 +171,24 @@ def get_data(city, month, day):
 		Returns:
 			A Pandas dataframe object
 	'''
-	#Read csv file
+	'''Read csv file'''
 	bikeshare_dataframe = pd.read_csv(data_dict[city])
 
-	#Convert 'Start Time' column to datetime and
-	#ceate columns for month, day, and hour
+	'''Convert 'Start Time' column to datetime and
+	   ceate columns for month, day, and hour'''
 	bikeshare_dataframe['Start Time'] = pd.to_datetime(bikeshare_dataframe['Start Time'])
 	bikeshare_dataframe['month'] = bikeshare_dataframe['Start Time'].dt.month
 	bikeshare_dataframe['day_of_week'] = bikeshare_dataframe['Start Time'].dt.weekday_name
 	bikeshare_dataframe['hour'] = bikeshare_dataframe['Start Time'].dt.hour
 
-	#Handle the case when user selects all months
+	'''Handle the case when user selects all months'''
 
 	if month.lower() != 'all':
 		months = dict(zip([list(month_dict.keys())[x] for x in range(len(month_dict)-1)], list(range(1,len(month_dict)))))
 		month = months.get(month)
 		bikeshare_dataframe = bikeshare_dataframe[bikeshare_dataframe['month'] == month]
 
-	#Handle the case when user selects all days
+	'''Handle the case when user selects all days'''
 
 	if day.lower() != 'all':
 		bikeshare_dataframe = bikeshare_dataframe[bikeshare_dataframe['day_of_week'] == day.title()]
@@ -207,7 +207,7 @@ def stats_trips(dataframe, city, month, day):
 			Prints output of stats
 	'''
 	print("Let's look at some of the trip stats.")
-	#Calculate the various stats. Use divmod() to create list of hrs and mins
+	'''Calculate the various stats. Use divmod() to create list of hrs and mins'''
 	median_trip_duration = dataframe['Trip Duration'].median()
 	median_trip_hrs = divmod(median_trip_duration, 60)
 	mean_travel_duration = int(dataframe['Trip Duration'].mean())
@@ -218,7 +218,7 @@ def stats_trips(dataframe, city, month, day):
 	longest_trip = dataframe['Trip Duration'].max()
 	shortest_trip = dataframe['Trip Duration'].min()
 
-	#Print statements to display stats
+	'''Print statements to display stats'''
 	print(
 	f"It looks like if you were to start your journey in {city} on a {day} in the",\
 	f"month of {month},\nyou might expect your average travel time to be at least",\
@@ -254,14 +254,20 @@ def stats_users(dataframe, city, month, day):
 	'''
 
 	print("We\'ll now look at some more detailed user stats for {}.\n".format(city))
+<<<<<<< HEAD
 	#Count the number of different user types
 	user_types = dataframe['User Type'].value_counts()
 	#Test whether dataset has 'Gender' as a column
+=======
+	'''Count the number of different user types'''
+	user_types = dataframe['User Type'].value_counts()
+	'''Test whether dataset has 'Gender' as a column'''
+>>>>>>> documentation
 	gender_test = 'Gender' in dataframe
-	#Test whether dataset has 'Birth Year' as a column
+	'''Test whether dataset has 'Birth Year' as a column'''
 	birth_year_test = 'Birth Year' in dataframe
 	gender = ''
-	#If dataset contains Gender, determine number of M and F
+	'''If dataset contains Gender, determine number of M and F'''
 	if gender_test == True:
 		gender = dataframe['Gender'].value_counts()
 		m_f_ratio = gender[0]/gender[1]
@@ -271,7 +277,7 @@ def stats_users(dataframe, city, month, day):
 		f"used\nthe bikesharing program in {city} during the dates specified.\n")
 	else:
 		print("This dataset does not contain gender data for {}.\n".format(city))
-	#If dataset contains Birth Year, determin oldest, youngest, and median
+	'''If dataset contains Birth Year, determin oldest, youngest, and median'''
 	if birth_year_test == True:
 		current_year = dt.date.today().year
 		least_recent_year = int(dataframe['Birth Year'].min())
@@ -302,6 +308,7 @@ def stats_station(dataframe, city, month, day):
 	'''
 	print("We\'ll now look at some more detailed station stats for {}.\n".format(city))
 
+<<<<<<< HEAD
 	#Determine most popular starting station
 	most_popular_start_station = dataframe['Start Station'].mode()[0]
 	print("The most popular starting station was:",most_popular_start_station)
@@ -311,6 +318,17 @@ def stats_station(dataframe, city, month, day):
 	print("The most popular ending station was:", most_popular_end_station)
 
 	#Determine most popular start/destination station combination
+=======
+	'''Determine most popular starting station'''
+	most_popular_start_station = dataframe['Start Station'].mode()[0]
+	print("The most popular starting station was:",most_popular_start_station)
+
+	'''Determine most popular destination station'''
+	most_popular_end_station = dataframe['End Station'].mode()[0]
+	print("The most popular ending station was:", most_popular_end_station)
+
+	'''Determine most popular start/destination station combination'''
+>>>>>>> documentation
 	most_popular_startstop_combo = dataframe.groupby(['Start Station','End Station']).size(
 	).sort_values(ascending=False).head(5).to_string()
 	print("\nThe top 5 most popular starting and ending station combinations were:\n\n", most_popular_startstop_combo)
@@ -329,24 +347,24 @@ def stats_dates(dataframe, city, month, day):
 			Prints data-based stats for bikesharing data
 	'''
 	print("We\'ll now look at some more detailed monthly, daily, or hourly stats for {}.\n".format(city))
-	#If user selected ALL months, this allows them to determine which month
-	#was the most popular. Can't determine most popular month if only
-	#using one month
+	'''If user selected ALL months, this allows them to determine which month
+	   was the most popular. Can't determine most popular month if only
+	   using one month'''
 	if month == 'All':
 		popular_month_index = dataframe['month'].mode()[0]
 		popular_month = list(month_dict)[popular_month_index - 1]
 		print("The most popular month is: {}".format(popular_month))
 	else:
 		print("Insufficient date range to determine the most popular month. Try \'All\' next time.")
-	#If user selected ALL days, this allows them to determine which day
-	#was the most popular. Can't determine most popular day if only
-	#using one day
+	'''If user selected ALL days, this allows them to determine which day
+	   was the most popular. Can't determine most popular day if only
+	   using one day'''
 	if day == 'All':
 		popular_day = dataframe['day_of_week'].mode()[0]
 		print("The most popular day is: {}".format(popular_day))
 	else:
 		print("Insufficient date range to determine the most popular day. Try \'All\' next time.")
-	#Determine the most popular hour and present in 12hr format.
+	'''Determine the most popular hour and present in 12hr format.'''
 	pop_hr = dataframe['hour'].mode()[0]
 	if popular_hr < 12:
 		print("The most popular hour is: {}a.m.".format(popular_hr))
@@ -366,26 +384,26 @@ def stats_missing_data(dataframe, city, month, day):
 		Returns:
 			Prints how many missing values there are
 	'''
-	#Count total NAN vals
+	'''Count total NAN vals'''
 	missing_values = np.count_nonzero(dataframe.isnull())
 	print("The number of missing values in the {} dataset : {}".format(city, missing_values))
 
-    #Counts the number of missing values in the User Type column
+    '''Counts the number of missing values in the User Type column'''
 	missing_user_data = np.count_nonzero(dataframe['User Type'].isnull())
 	print("The number of missing User Type values is: {}\n".format(missing_user_data))
 
-	#Tests whether Birth Year and Gender are columns in dataframe
+	'''Tests whether Birth Year and Gender are columns in dataframe'''
 	birth_year_test = 'Birth Year' in dataframe
 	gender_test = 'Gender' in dataframe
 
-	#Prints nr of missing birth year values
+	'''Prints nr of missing birth year values'''
 	if birth_year_test == True:
 		missing_birth_data = np.count_nonzero(dataframe['Birth Year'].isnull())
 		print("The number of missing Birth Year values is: {}".format(missing_birth_data))
 	else:
 		print("The dataset for {} does not contain birth year information:\nMissing values cannot be computed.".format(city))
 		missing_birth_data = 0
-	#Prints nr of missing gender values
+	'''Prints nr of missing gender values'''
 	if gender_test == True:
 		missing_gender_data = np.count_nonzero(dataframe['Gender'].isnull())
 		print("The number of missing Gender values is: {}".format(missing_gender_data))
@@ -393,7 +411,7 @@ def stats_missing_data(dataframe, city, month, day):
 		missing_gender_data = 0
 		print("The dataset for {} does not contain gender information:\nMissing values cannot be computed.".format(city))
 
-	#Tells user if all missing vals are accounted for and how many are unknown.
+	'''Tells user if all missing vals are accounted for and how many are unknown.'''
 	data_test = (missing_values - missing_user_data - missing_birth_data - missing_gender_data)
 	if data_test == 0:
 		print("\nAll missing data accounted for. Total unaccounted values: {}".format(data_test))
@@ -402,6 +420,17 @@ def stats_missing_data(dataframe, city, month, day):
 	print("*"*100)
 
 def raw_data_display(dataframe):
+
+	'''
+		Purpose:
+			Displays the raw data as long as user input is "yes"
+		Args:
+			dataframe
+		Returns:
+			Prints 5 lines of raw data to the console at a times
+			as long as user input remains "yes"
+	'''
+
 	while True:
 		i = 0
 		display_data = input("\nWould you like to display 5 lines of data? Enter yes or no.\n")
